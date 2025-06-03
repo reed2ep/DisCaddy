@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DisCaddy.Models
+{
+    public class Disc
+    {
+        public string Name { get; set; }            // e.g., "Destroyer"
+        public string Type { get; set; }            // e.g., "Driver", "Putter"
+        public int Speed { get; set; }              // 1–14
+        public int Glide { get; set; }              // 1–7
+        public int Turn { get; set; }               // -5 to +1
+        public int Fade { get; set; }               // 0–5
+        public string Stability => GetStability();  // derived from Turn/Fade
+
+        private string GetStability()
+        {
+            if (Turn <= -3) return "Understable";
+            if (Turn >= 0 && Fade >= 3) return "Overstable";
+            return "Neutral";
+        }
+
+        public override string ToString()
+        {
+            return $"{Name} ({Type}) - S:{Speed} G:{Glide} T:{Turn} F:{Fade}";
+        }
+    }
+}

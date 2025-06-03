@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:DisCaddy.Models"
+             x:Class="DisCaddy.Views.BagPage"
+             Title="BagPage">
+    <ContentPage.BindingContext>
+        <local:BagViewModel />
+    </ContentPage.BindingContext>
+
+    <StackLayout Padding="10">
+        <CollectionView ItemsSource="{Binding Discs}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BorderColor="Gray" Padding="8" Margin="5">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Name}" FontAttributes="Bold" />
+                            <Label Text="{Binding Type}" />
+                            <Label Text="{Binding Stability}" />
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Speed: " />
+                                        <Span Text="{Binding Speed}" />
+                                        <Span Text=", Glide: " />
+                                        <Span Text="{Binding Glide}" />
+                                        <Span Text=", Turn: " />
+                                        <Span Text="{Binding Turn}" />
+                                        <Span Text=", Fade: " />
+                                        <Span Text="{Binding Fade}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Button Text="Add Disc" Command="{Binding AddDiscCommand}" />
+    </StackLayout>
+</ContentPage>
