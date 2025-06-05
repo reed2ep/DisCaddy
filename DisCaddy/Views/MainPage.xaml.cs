@@ -14,6 +14,11 @@ namespace DisCaddy.Views
         {
             await Navigation.PushAsync(new BagPage());
         }
+
+        private async void OnHoleSetupPageClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new HoleSetupPage());
+        }
     }
 
 }

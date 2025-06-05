@@ -60,6 +60,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="config.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="config.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
 	</ItemGroup>
@@ -78,5 +88,7 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
+
+	<ProjectExtensions><VisualStudio><UserProperties config_1json__JsonSchema="json" /></VisualStudio></ProjectExtensions>
 
 </Project>
