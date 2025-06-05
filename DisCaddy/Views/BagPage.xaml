@@ -3,12 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:DisCaddy.Models"
              x:Class="DisCaddy.Views.BagPage"
-             Title="BagPage">
+             Title="Your Bag">
     <ContentPage.BindingContext>
         <local:BagViewModel />
     </ContentPage.BindingContext>
 
-    <StackLayout Padding="10">
+    <StackLayout Padding="10" Spacing="8">
+        <Button Text="Add Disc" Command="{Binding AddDiscCommand}" />
+        <Entry Placeholder="Disc Name" Text="{Binding NewDisc.Name}" />
+        <Picker Title="Type" ItemsSource="{Binding DiscTypes}" SelectedItem="{Binding NewDisc.Type}" />
+
+        <Entry Placeholder="Speed" Keyboard="Numeric" Text="{Binding NewDisc.Speed}" />
+        <Entry Placeholder="Glide" Keyboard="Numeric" Text="{Binding NewDisc.Glide}" />
+        <Entry Placeholder="Turn" Keyboard="Numeric" Text="{Binding NewDisc.Turn}" />
+        <Entry Placeholder="Fade" Keyboard="Numeric" Text="{Binding NewDisc.Fade}" />
+
         <CollectionView ItemsSource="{Binding Discs}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
@@ -36,6 +45,5 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        <Button Text="Add Disc" Command="{Binding AddDiscCommand}" />
     </StackLayout>
 </ContentPage>

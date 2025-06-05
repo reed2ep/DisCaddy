@@ -13,18 +13,22 @@ namespace DisCaddy.Models
     {
         public ObservableCollection<Disc> Discs { get; set; } = new();
         public ICommand AddDiscCommand { get; }
+        public Disc NewDisc { get; set; } = new();
+        public List<string> DiscTypes { get; } = new() { "Driver", "Control", "Mid", "Putter" };
 
         public BagViewModel()
         {
             AddDiscCommand = new Command(AddDisc);
-            Discs.Add(new Disc { Name = "Destroyer", Type = "Driver", Speed = 12, Glide = 5, Turn = -1, Fade = 3 });
         }
 
         void AddDisc()
         {
-            Discs.Add(new Disc { Name = "New Disc", Type = "Putter", Speed = 2, Glide = 3, Turn = 0, Fade = 1 });
+            Discs.Add(new Disc { Name = NewDisc.Name, Type = NewDisc.Type, Speed = NewDisc.Speed, Glide = NewDisc.Glide, Turn = NewDisc.Turn, Fade = NewDisc.Fade });
+            NewDisc = new Disc();
+            OnPropertyChanged(nameof(NewDisc));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
