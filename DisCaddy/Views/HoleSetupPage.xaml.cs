@@ -3,7 +3,9 @@ using System.Net.Http;
 
 public partial class HoleSetupPage : ContentPage
 {
-	public HoleSetupPage()
+    private CancellationTokenSource _cancelTokenSource;
+    public double? currentHeading = null;
+    public HoleSetupPage()
 	{
 		InitializeComponent();
 	}
@@ -11,19 +13,17 @@ public partial class HoleSetupPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await GetWeatherData();
+        await GetCurrentLocation();
+        await StartCompass();
+
     }
 
-    public async Task GetWeatherData()
+    public async Task GetWeatherData(double lat, double lon)
 	{
-		double lat = 40.6892;
-		double lon = -74.0445;
-
-		string part = "minutely,hourly,daily,alerts";
 		var config = ConfigLoader.Load();
 		string key = config.OpenWeatherApiKey;
 
-        string uri = $"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={part}&appid={key}";
+        string uri = $"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude=minutely,hourly,daily,alerts&appid={key}";
 
 
         HttpClient client = new HttpClient();
@@ -34,5 +34,46 @@ public partial class HoleSetupPage : ContentPage
             string json = await response.Content.ReadAsStringAsync();
             Console.WriteLine(json); 
         }
+    }
+
+    public async Task GetCurrentLocation()
+    {
+        try
+        {
+            GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
+            _cancelTokenSource = new CancellationTokenSource();
+            Location location = await Geolocation.Default.GetLocationAsync(request, _cancelTokenSource.Token);
+
+            if (location != null)
+                await GetWeatherData(location.Latitude, location.Longitude);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Location Access Failed");
+        }
+    }
+
+    public async Task StartCompass()
+    {
+        if(!Compass.Default.IsSupported)
+        {
+            Console.WriteLine("Compass Unsupported");
+            return;
+        }
+        Compass.Default.ReadingChanged += Compass_ReadingChanged;
+        Compass.Default.Start(SensorSpeed.UI);
+    }
+
+    private void Compass_ReadingChanged(object sender, CompassChangedEventArgs e)
+    {
+        CompassData data = e.Reading;
+        currentHeading = data.HeadingMagneticNorth;
+        Console.WriteLine($"Heading: {currentHeading}°");
+    }
+
+    public void StopCompass()
+    {
+        if (Compass.Default.IsMonitoring)
+            Compass.Default.Stop();
     }
 }
