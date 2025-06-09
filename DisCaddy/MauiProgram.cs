@@ -14,6 +14,11 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
+		builder.Services.AddSingleton<IDiscRepository>(s =>
+		{
+			var dbPath = Path.Combine(FileSystem.AppDataDirectory, "discs.db3");
+			return new SQLiteDiscRepository(dbPath);
+		});
 
 #if DEBUG
 		builder.Logging.AddDebug();

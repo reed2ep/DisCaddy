@@ -62,6 +62,7 @@ public partial class HoleSetupPage : ContentPage
         }
         Compass.Default.ReadingChanged += Compass_ReadingChanged;
         Compass.Default.Start(SensorSpeed.UI);
+        StopCompass();
     }
 
     private void Compass_ReadingChanged(object sender, CompassChangedEventArgs e)
