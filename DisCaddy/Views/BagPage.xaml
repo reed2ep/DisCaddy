@@ -4,9 +4,6 @@
              xmlns:local="clr-namespace:DisCaddy.Models"
              x:Class="DisCaddy.Views.BagPage"
              Title="Your Bag">
-    <ContentPage.BindingContext>
-        <local:BagViewModel />
-    </ContentPage.BindingContext>
 
     <StackLayout Padding="10" Spacing="8">
         <Button Text="Add Disc" Command="{Binding AddDiscCommand}" />

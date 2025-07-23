@@ -1,18 +1,22 @@
 ﻿using System.Threading.Tasks;
 using DisCaddy;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DisCaddy.Views
 {
     public partial class MainPage : ContentPage
     {
-        public MainPage()
+        private readonly IServiceProvider _serviceProvider;
+        public MainPage(IServiceProvider serviceProvider)
         {
             InitializeComponent();
+            _serviceProvider = serviceProvider;
         }
 
         private async void OnBagPageClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new BagPage());
+            var bagPage = _serviceProvider.GetService<BagPage>();
+            await Navigation.PushAsync(bagPage);
         }
 
         private async void OnHoleSetupPageClicked(object sender, EventArgs e)
