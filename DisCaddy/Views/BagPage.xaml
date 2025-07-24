@@ -6,6 +6,48 @@
              Title="Your Bag">
 
     <StackLayout Padding="10" Spacing="8">
+        <CollectionView ItemsSource="{Binding Discs}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10" ColumnDefinitions="Auto, *, Auto" VerticalOptions="Center">
+
+                        <!-- Icon -->
+                        <Image Source="{Binding ImagePath}"
+                           WidthRequest="40"
+                           HeightRequest="40"
+                           VerticalOptions="Center" />
+
+                        <!-- Disc info -->
+                        <VerticalStackLayout Grid.Column="1" Padding="10,0">
+                            <Label Text="{Binding Name}"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+                            <Label Text="{Binding Type}"
+                           FontSize="13"
+                           TextColor="Gray" />
+                            <Label Text="{Binding Summary}" FontSize="12" />
+                        </VerticalStackLayout>
+
+                        <HorizontalStackLayout Grid.Column="2" Spacing="10" VerticalOptions="Center">
+                            <!-- Camera button -->
+                            <Button Text="📷"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:BagViewModel}}, Path=ChangeDiscImageCommand}"
+                            CommandParameter="{Binding .}"
+                            BackgroundColor="Transparent"
+                            FontSize="18" />
+
+                            <!-- Delete button -->
+                            <Button Text="🗑"
+                            FontSize="18"
+                            TextColor="Red"
+                            BackgroundColor="Transparent"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:BagViewModel}}, Path=DeleteDiscCommand}"
+                            CommandParameter="{Binding .}" />
+                        </HorizontalStackLayout>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
         <Button Text="Add Disc" Command="{Binding AddDiscCommand}" />
         <Entry Placeholder="Disc Name" Text="{Binding NewDisc.Name}" />
         <Picker Title="Type" ItemsSource="{Binding DiscTypes}" SelectedItem="{Binding NewDisc.Type}" />
@@ -14,33 +56,5 @@
         <Entry Placeholder="Glide" Keyboard="Numeric" Text="{Binding NewDisc.Glide}" />
         <Entry Placeholder="Turn" Keyboard="Numeric" Text="{Binding NewDisc.Turn}" />
         <Entry Placeholder="Fade" Keyboard="Numeric" Text="{Binding NewDisc.Fade}" />
-
-        <CollectionView ItemsSource="{Binding Discs}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame BorderColor="Gray" Padding="8" Margin="5">
-                        <VerticalStackLayout>
-                            <Label Text="{Binding Name}" FontAttributes="Bold" />
-                            <Label Text="{Binding Type}" />
-                            <Label Text="{Binding Stability}" />
-                            <Label>
-                                <Label.FormattedText>
-                                    <FormattedString>
-                                        <Span Text="Speed: " />
-                                        <Span Text="{Binding Speed}" />
-                                        <Span Text=", Glide: " />
-                                        <Span Text="{Binding Glide}" />
-                                        <Span Text=", Turn: " />
-                                        <Span Text="{Binding Turn}" />
-                                        <Span Text=", Fade: " />
-                                        <Span Text="{Binding Fade}" />
-                                    </FormattedString>
-                                </Label.FormattedText>
-                            </Label>
-                        </VerticalStackLayout>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
     </StackLayout>
 </ContentPage>
