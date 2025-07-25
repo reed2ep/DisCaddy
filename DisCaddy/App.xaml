@@ -5,10 +5,16 @@
              x:Class="DisCaddy.App">
     <Application.Resources>
         <ResourceDictionary>
+
+            <!-- External style resources -->
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- Local resources go directly here -->
+            <local:BoolToTextConverter x:Key="BoolToTextConverter" />
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

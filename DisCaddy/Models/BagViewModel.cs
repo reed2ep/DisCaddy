@@ -14,6 +14,7 @@ namespace DisCaddy.Models
     public class BagViewModel : INotifyPropertyChanged
     {
         private readonly IDiscRepository _repo;
+        private bool isAddingDisc;
         public ObservableCollection<Disc> Discs { get; set; } = new();
         public ICommand AddDiscCommand { get; }
         public ICommand DeleteDiscCommand { get; }
@@ -30,6 +31,7 @@ namespace DisCaddy.Models
             LoadDiscs();
         }
 
+        #region Add disc
         private async Task AddDisc()
         {
             var disc = new Disc
@@ -46,7 +48,26 @@ namespace DisCaddy.Models
             Discs.Add(disc);
             NewDisc = new Disc();
             OnPropertyChanged(nameof(NewDisc));
+            IsAddingDisc = false;
         }
+        public bool IsAddingDisc
+        {
+            get => isAddingDisc;
+            set
+            {
+                if (isAddingDisc != value)
+                {
+                    isAddingDisc = value;
+                    OnPropertyChanged(nameof(IsAddingDisc));
+                }
+            }
+        }
+
+        public ICommand ToggleAddDiscCommand => new Command(() =>
+        {
+            IsAddingDisc = !IsAddingDisc;
+        });
+        #endregion
 
         private async void LoadDiscs()
         {
