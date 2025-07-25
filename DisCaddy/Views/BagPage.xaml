@@ -48,13 +48,17 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        <Button Text="Add Disc" Command="{Binding AddDiscCommand}" />
-        <Entry Placeholder="Disc Name" Text="{Binding NewDisc.Name}" />
-        <Picker Title="Type" ItemsSource="{Binding DiscTypes}" SelectedItem="{Binding NewDisc.Type}" />
+        <Button Text="{Binding IsAddingDisc, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Add Disc|Cancel'}"
+        Command="{Binding ToggleAddDiscCommand}" />
 
-        <Entry Placeholder="Speed" Keyboard="Numeric" Text="{Binding NewDisc.Speed}" />
-        <Entry Placeholder="Glide" Keyboard="Numeric" Text="{Binding NewDisc.Glide}" />
-        <Entry Placeholder="Turn" Keyboard="Numeric" Text="{Binding NewDisc.Turn}" />
-        <Entry Placeholder="Fade" Keyboard="Numeric" Text="{Binding NewDisc.Fade}" />
+        <StackLayout IsVisible="{Binding IsAddingDisc}">
+            <Entry Placeholder="Disc Name" Text="{Binding NewDisc.Name}" />
+            <Picker Title="Type" ItemsSource="{Binding DiscTypes}" SelectedItem="{Binding NewDisc.Type}" />
+            <Entry Placeholder="Speed" Keyboard="Numeric" Text="{Binding NewDisc.Speed}" />
+            <Entry Placeholder="Glide" Keyboard="Numeric" Text="{Binding NewDisc.Glide}" />
+            <Entry Placeholder="Turn" Keyboard="Numeric" Text="{Binding NewDisc.Turn}" />
+            <Entry Placeholder="Fade" Keyboard="Numeric" Text="{Binding NewDisc.Fade}" />
+            <Button Text="Save Disc" Command="{Binding AddDiscCommand}" />
+        </StackLayout>
     </StackLayout>
 </ContentPage>
