@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
+             x:Class="DisCaddy.Views.MapPage"
+             Title="MapPage">
+
+    <ContentPage.Content>
+        <maps:Map x:Name="MyMap"
+                  IsShowingUser="True"
+                  MapType="Street"
+                  HeightRequest="500"
+                  VerticalOptions="FillAndExpand" />
+    </ContentPage.Content>
+</ContentPage>

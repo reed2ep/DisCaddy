@@ -90,6 +90,12 @@
 	  </MauiXaml>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="Views\MapPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </None>
+	</ItemGroup>
+
 	<ProjectExtensions><VisualStudio><UserProperties config_1json__JsonSchema="json" /></VisualStudio></ProjectExtensions>
 
 </Project>
