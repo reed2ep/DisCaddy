@@ -23,6 +23,11 @@ namespace DisCaddy.Views
         {
             await Navigation.PushAsync(new HoleSetupPage());
         }
+
+        private async void OnMapPageClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new MapPage());
+        }
     }
 
 }

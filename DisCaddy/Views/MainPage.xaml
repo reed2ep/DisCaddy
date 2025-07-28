@@ -37,6 +37,13 @@
                 SemanticProperties.Hint="Hole Layout"
                 Clicked="OnHoleSetupPageClicked"
                 HorizontalOptions="Fill" />
+
+            <Button
+                x:Name="MapPageBtn"
+                Text="Go to the Map" 
+                SemanticProperties.Hint="Setup the Course"
+                Clicked="OnMapPageClicked"
+                HorizontalOptions="Fill" />
         </VerticalStackLayout>
     </ScrollView>
 

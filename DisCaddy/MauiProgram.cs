@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Hosting;
+using Microsoft.Maui.Controls.Maps;
 
 namespace DisCaddy;
 
@@ -26,11 +28,12 @@ public static class MauiProgram
         });
 		builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<BagPage>();
+        builder.UseMauiApp<App>().UseMauiMaps();
 
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
 
-		return builder.Build();
+        return builder.Build();
 	}
 }
