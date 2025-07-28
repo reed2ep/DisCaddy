@@ -1,27 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Microsoft.Maui.Controls.Maps;
+using Microsoft.Maui.Devices.Sensors;
+using Microsoft.Maui.Maps;
 
 namespace DisCaddy.Models
 {
     public class MapViewModel
     {
-        public MapViewModel()
+        private string status;
+        public string Status
         {
-            GeoLocateCommand = new Command(async () => await GeoLocate());
-        }
-
-        private async Task GeoLocate()
-        {
-            var location = await Geolocation.GetLocationAsync();
-            if (location != null)
+            get => status;
+            set
             {
-                MyMap.MoveToRegion(MapSpan.FromCenterAndRadius(
-                    new Location(location.Latitude, location.Longitude),
-                    Distance.FromMeters(50)));
+                if (status != value)
+                {
+                    status = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
+                }
             }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }
