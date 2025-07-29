@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Controls.Maps;
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Maps;
 
 namespace DisCaddy;
 
@@ -28,7 +30,7 @@ public static class MauiProgram
         });
 		builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<BagPage>();
-        builder.UseMauiApp<App>().UseMauiMaps();
+        builder.UseMauiApp<App>().UseMauiMaps().UseMauiCommunityToolkit().UseMauiCommunityToolkitMaps("AIzaSyBfKwcN4vU8wp8-Mxr0-juOqhQi0Amnuzs");
 
 #if DEBUG
         builder.Logging.AddDebug();
