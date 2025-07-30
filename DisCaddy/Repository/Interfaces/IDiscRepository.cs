@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DisCaddy.Models;
 
-namespace DisCaddy
+namespace DisCaddy.Repository.Interfaces
 {
     public interface IDiscRepository
     {

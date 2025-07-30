@@ -1,4 +1,5 @@
 using DisCaddy.Models;
+using DisCaddy.Repository.Interfaces;
 
 namespace DisCaddy.Views;
 public partial class BagPage : ContentPage
