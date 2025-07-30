@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using SQLite;
 using DisCaddy.Models;
-namespace DisCaddy
+using DisCaddy.Repository.Interfaces;
+namespace DisCaddy.Repository
 {
-    public class SQLiteDiscRepository : IDiscRepository
+    public class DiscRepository : IDiscRepository
     {
         private readonly SQLiteAsyncConnection _database;
 
-        public SQLiteDiscRepository(string dbPath)
+        public DiscRepository(string dbPath)
         {
             _database = new SQLiteAsyncConnection(dbPath);
             _database.CreateTableAsync<Disc>().Wait();

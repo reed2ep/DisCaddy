@@ -82,7 +82,7 @@
 	  <MauiXaml Update="Views\BagPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\HoleSetupPage.xaml">
+	  <MauiXaml Update="Views\CourseSelectPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\PlayPage.xaml">

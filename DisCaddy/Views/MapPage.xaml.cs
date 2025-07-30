@@ -61,6 +61,11 @@ public partial class MapPage : ContentPage
         DistanceLabel.Text = $"Total Distance: {totalFeet:0} ft";
     }
 
+    private void OnSaveHole(object sender, EventArgs e)
+    {
+        
+    }
+
     private void OnClearClicked(object sender, EventArgs e)
     {
         flightPathPoints.Clear();

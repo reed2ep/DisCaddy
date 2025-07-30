@@ -6,6 +6,8 @@ using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Controls.Maps;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Maps;
+using DisCaddy.Repository;
+using DisCaddy.Repository.Interfaces;
 
 namespace DisCaddy;
 
@@ -26,7 +28,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<IDiscRepository>(s =>
 		{
 			var dbPath = Path.Combine(FileSystem.AppDataDirectory, "discs.db3");
-			return new SQLiteDiscRepository(dbPath);
+			return new DiscRepository(dbPath);
         });
 		builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<BagPage>();
