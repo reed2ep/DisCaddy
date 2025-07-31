@@ -8,6 +8,7 @@ namespace DisCaddy.Models
 {
     public class AppConfig
     {
+        public string GoogleMapsApiKey { get; set; }
         public string OpenWeatherApiKey { get; set; }
     }
 }

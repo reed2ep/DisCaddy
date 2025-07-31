@@ -16,11 +16,7 @@ public static class MauiProgram
 {
 	public static MauiApp CreateMauiApp()
 	{
-        var configPath = Path.Combine(AppContext.BaseDirectory, "config.json");
-        string apiKey = File.Exists(configPath)
-            ? JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(configPath))["GoogleMapsApiKey"]
-            : throw new Exception("Missing API key.");
-
+        var config = ConfigLoader.Load();
         var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
@@ -30,14 +26,17 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
 
-		builder.Services.AddSingleton<IDiscRepository>(s =>
+        builder.UseMauiMaps();
+        builder.UseMauiCommunityToolkit();
+        builder.UseMauiCommunityToolkitMaps(config.GoogleMapsApiKey);
+
+        builder.Services.AddSingleton<IDiscRepository>(s =>
 		{
 			var dbPath = Path.Combine(FileSystem.AppDataDirectory, "discs.db3");
 			return new DiscRepository(dbPath);
         });
 		builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<BagPage>();
-        builder.UseMauiApp<App>().UseMauiMaps().UseMauiCommunityToolkit().UseMauiCommunityToolkitMaps(apiKey);
 
 #if DEBUG
         builder.Logging.AddDebug();
