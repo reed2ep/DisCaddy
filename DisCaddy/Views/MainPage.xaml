@@ -30,13 +30,6 @@
                 SemanticProperties.Hint="Stores your discs"
                 Clicked="OnBagPageClicked"
                 HorizontalOptions="Fill" />
-            
-            <Button
-                x:Name="HoleSetupPageBtn"
-                Text="Go to Hole 1" 
-                SemanticProperties.Hint="Hole Layout"
-                Clicked="OnHoleSetupPageClicked"
-                HorizontalOptions="Fill" />
 
             <Button
                 x:Name="MapPageBtn"
