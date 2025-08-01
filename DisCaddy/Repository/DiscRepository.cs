@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SQLite;
-using DisCaddy.Models;
 using DisCaddy.Repository.Interfaces;
+using DisCaddy.Objects;
 namespace DisCaddy.Repository
 {
     public class DiscRepository : IDiscRepository

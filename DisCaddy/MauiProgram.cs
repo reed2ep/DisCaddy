@@ -30,13 +30,28 @@ public static class MauiProgram
         builder.UseMauiCommunityToolkit();
         builder.UseMauiCommunityToolkitMaps(config.GoogleMapsApiKey);
 
+        builder.Services.AddTransient<MainPage>();
+
         builder.Services.AddSingleton<IDiscRepository>(s =>
 		{
 			var dbPath = Path.Combine(FileSystem.AppDataDirectory, "discs.db3");
 			return new DiscRepository(dbPath);
         });
-		builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<BagPage>();
+
+        builder.Services.AddSingleton<ICourseRepository>(s =>
+        {
+            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "courses.db3");
+            return new CourseRepository(dbPath);
+        });
+
+        builder.Services.AddSingleton<IHoleRepository>(s =>
+        {
+            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "holes.db3");
+            return new HoleRepository(dbPath);
+        });
+
+        builder.Services.AddTransient<CourseSelectPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

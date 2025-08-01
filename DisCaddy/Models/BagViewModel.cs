@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using static SQLite.SQLite3;
 using DisCaddy.Repository.Interfaces;
+using DisCaddy.Objects;
 
 namespace DisCaddy.Models
 {

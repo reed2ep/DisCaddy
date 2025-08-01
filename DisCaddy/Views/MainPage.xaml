@@ -37,6 +37,13 @@
                 SemanticProperties.Hint="Setup the Course"
                 Clicked="OnMapPageClicked"
                 HorizontalOptions="Fill" />
+
+            <Button
+                x:Name="CourseSelectBtn"
+                Text="Choose a Course" 
+                SemanticProperties.Hint="Select a Course or Create a New One"
+                Clicked="OnCourseSelectPageClicked"
+                HorizontalOptions="Fill" />
         </VerticalStackLayout>
     </ScrollView>
 
