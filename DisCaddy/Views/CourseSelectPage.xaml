@@ -5,6 +5,13 @@
              Title="CourseSelectPage">
     <VerticalStackLayout>
         <StackLayout Padding="10" Spacing="8">
+            <Button
+                x:Name="CourseCreateBtn"
+                Text="Go to the Map" 
+                SemanticProperties.Hint="Create New Course"
+                Clicked="OnCourseCreateClicked"
+                HorizontalOptions="Fill" />
+            
             <CollectionView ItemsSource="{Binding Courses}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>

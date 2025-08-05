@@ -3,15 +3,17 @@ using Microsoft.Maui.Maps;
 using CommunityToolkit.Maui.Maps;
 using Microsoft.Maui.Controls.Maps;
 using Microsoft.Maui.Controls.Shapes;
+using DisCaddy.Repository.Interfaces;
+using DisCaddy.Objects;
 namespace DisCaddy.Views;
 
 public partial class MapPage : ContentPage
 {
     List<Location> flightPathPoints = new();
-    public MapPage()
+    public MapPage(ICourseRepository courseRepo, IHoleRepository holeRepo)
 	{
 		InitializeComponent();
-		BindingContext = new MapViewModel();
+		BindingContext = new MapViewModel(courseRepo, holeRepo);
         InitMapAsync();
         MyMap.MapClicked += (s, e) =>
         {
@@ -61,11 +63,6 @@ public partial class MapPage : ContentPage
         DistanceLabel.Text = $"Total Distance: {totalFeet:0} ft";
     }
 
-    private void OnSaveHole(object sender, EventArgs e)
-    {
-        
-    }
-
     private void OnClearClicked(object sender, EventArgs e)
     {
         flightPathPoints.Clear();
@@ -83,5 +80,49 @@ public partial class MapPage : ContentPage
                 DistanceUnits.Miles);
         }
         return total * 5280;
+    }
+
+    private async void OnCreateCourseClicked(object sender, EventArgs e)
+    {
+        if (BindingContext is MapViewModel vm)
+        {
+            // Hardcoded course name for now; replace with entry input later
+            await vm.CreateCourseAsync("New Course");
+            await DisplayAlert("Success", "Course created. You can now add holes.", "OK");
+        }
+    }
+
+    private async void OnSaveHole(object sender, EventArgs e)
+    {
+        if (BindingContext is MapViewModel vm)
+        {
+            if (flightPathPoints.Count < 2)
+            {
+                await DisplayAlert("Error", "Add at least a tee and basket point.", "OK");
+                return;
+            }
+
+            var tee = flightPathPoints.First();
+            var basket = flightPathPoints.Last();
+            var geoPath = flightPathPoints.Select(p => new GeoPoint(p.Latitude, p.Longitude)).ToList();
+
+            var hole = new Hole
+            {
+                HoleNumber = vm.Holes.Count + 1,
+                TeeLocation = new GeoPoint(tee.Latitude, tee.Longitude),
+                BasketLocation = new GeoPoint(basket.Latitude, basket.Longitude),
+                FlightPath = geoPath,
+                Par = 3, // hardcoded for now; could add Entry
+                LengthFeet = CalculateTotalDistance()
+            };
+
+            await vm.AddHoleAsync(hole);
+            await DisplayAlert("Saved", $"Hole {hole.HoleNumber} saved.", "OK");
+
+            // Reset the map
+            flightPathPoints.Clear();
+            MyMap.MapElements.Clear();
+            DistanceLabel.Text = "Total Distance: 0 ft";
+        }
     }
 }
