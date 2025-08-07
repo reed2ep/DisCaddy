@@ -7,7 +7,7 @@
         <StackLayout Padding="10" Spacing="8">
             <Button
                 x:Name="CourseCreateBtn"
-                Text="Go to the Map" 
+                Text="Create New Course" 
                 SemanticProperties.Hint="Create New Course"
                 Clicked="OnCourseCreateClicked"
                 HorizontalOptions="Fill" />

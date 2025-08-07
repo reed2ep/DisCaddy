@@ -9,6 +9,7 @@ using CommunityToolkit.Maui.Maps;
 using DisCaddy.Repository;
 using DisCaddy.Repository.Interfaces;
 using System.Text.Json;
+using DisCaddy.Models;
 
 namespace DisCaddy;
 
@@ -52,6 +53,8 @@ public static class MauiProgram
         });
 
         builder.Services.AddTransient<CourseSelectPage>();
+        builder.Services.AddTransient<MapPage>();
+        builder.Services.AddTransient<MapViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

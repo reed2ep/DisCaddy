@@ -87,7 +87,7 @@ public partial class MapPage : ContentPage
         if (BindingContext is MapViewModel vm)
         {
             // Hardcoded course name for now; replace with entry input later
-            await vm.CreateCourseAsync("New Course");
+            await vm.CreateCourseAsync();
             await DisplayAlert("Success", "Course created. You can now add holes.", "OK");
         }
     }

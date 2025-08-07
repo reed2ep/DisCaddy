@@ -32,7 +32,7 @@ namespace DisCaddy.Models
             Holes = new ObservableCollection<Hole>();
 
             AddHoleCommand = new Command<Hole>(async hole => await AddHoleAsync(hole));
-            SaveCourseCommand = new Command(async () => await SaveCourseAsync());
+            SaveCourseCommand = new Command(async () => await CreateCourseAsync());
         }
         private string status;
         public string Status
@@ -47,18 +47,12 @@ namespace DisCaddy.Models
                 }
             }
         }
-        private async Task SaveCourseAsync()
+        public async Task CreateCourseAsync()
         {
-            var course = new Course
-            {
-                Name = CourseName,
-            };
+            if (string.IsNullOrWhiteSpace(CourseName))
+                return;
 
-            await _courseRepo.SaveCourseAsync(course);
-        }
-        public async Task CreateCourseAsync(string name)
-        {
-            var course = new Course { Name = name };
+            var course = new Course { Name = CourseName };
             await _courseRepo.SaveCourseAsync(course);
             CurrentCourse = course;
         }

@@ -6,6 +6,8 @@
              Title="MapPage">
 
     <StackLayout>
+        <Entry Placeholder="Enter course name" Text="{Binding CourseName}" />
+        
         <maps:Map x:Name="MyMap"
                   IsShowingUser="True"
                   MapType="Hybrid"
