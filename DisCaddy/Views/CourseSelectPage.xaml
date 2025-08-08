@@ -11,8 +11,10 @@
                 SemanticProperties.Hint="Create New Course"
                 Clicked="OnCourseCreateClicked"
                 HorizontalOptions="Fill" />
-            
-            <CollectionView ItemsSource="{Binding Courses}">
+
+            <CollectionView ItemsSource="{Binding Courses}"
+                SelectionMode="Single"
+                SelectionChanged="OnCourseSelected">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid Padding="10" ColumnDefinitions="Auto, *, Auto" VerticalOptions="Center">

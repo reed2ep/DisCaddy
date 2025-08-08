@@ -1,6 +1,7 @@
 using DisCaddy.Repository.Interfaces;
 using DisCaddy.Models;
 using Microsoft.Extensions.DependencyInjection;
+using DisCaddy.Objects;
 
 namespace DisCaddy.Views;
 
@@ -21,5 +22,20 @@ public partial class CourseSelectPage : ContentPage
     {
         var mapPage = _serviceProvider.GetRequiredService<MapPage>();
         await Navigation.PushAsync(mapPage);
+    }
+
+    private async void OnCourseSelected(object sender, SelectionChangedEventArgs e)
+    {
+        if (e.CurrentSelection.FirstOrDefault() is Course selectedCourse)
+        {
+            var mapPage = _serviceProvider.GetRequiredService<MapPage>();
+
+            if (mapPage.BindingContext is MapViewModel vm)
+                await vm.LoadCourseAsync(selectedCourse);
+
+            await Navigation.PushAsync(mapPage);
+
+            ((CollectionView)sender).SelectedItem = null;
+        }
     }
 }

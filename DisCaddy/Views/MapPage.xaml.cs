@@ -12,9 +12,15 @@ public partial class MapPage : ContentPage
     List<Location> flightPathPoints = new();
     public MapPage(ICourseRepository courseRepo, IHoleRepository holeRepo)
 	{
-		InitializeComponent();
-		BindingContext = new MapViewModel(courseRepo, holeRepo);
-        InitMapAsync();
+        InitializeComponent();
+        var vm = new MapViewModel(courseRepo, holeRepo);
+        BindingContext = vm;
+
+        vm.CenterMapRequested += location =>
+        {
+            MyMap.MoveToRegion(MapSpan.FromCenterAndRadius(location, Distance.FromMeters(50)));
+        };
+
         MyMap.MapClicked += (s, e) =>
         {
             var tappedPoint = e.Location;
@@ -123,6 +129,19 @@ public partial class MapPage : ContentPage
             flightPathPoints.Clear();
             MyMap.MapElements.Clear();
             DistanceLabel.Text = "Total Distance: 0 ft";
+        }
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (BindingContext is MapViewModel vm)
+        {
+            vm.CenterMapRequested += location =>
+            {
+                MyMap.MoveToRegion(MapSpan.FromCenterAndRadius(location, Distance.FromMeters(50)));
+            };
         }
     }
 }
