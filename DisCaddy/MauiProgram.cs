@@ -17,7 +17,7 @@ public static class MauiProgram
 {
 	public static MauiApp CreateMauiApp()
 	{
-        var config = ConfigLoader.Load();
+        var config = Task.Run(() => ConfigLoader.LoadAsync()).GetAwaiter().GetResult();
         var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
@@ -55,6 +55,7 @@ public static class MauiProgram
         builder.Services.AddTransient<CourseSelectPage>();
         builder.Services.AddTransient<MapPage>();
         builder.Services.AddTransient<MapViewModel>();
+        builder.Services.AddSingleton<IAppConfigProvider, AppConfigProvider>();
 
 #if DEBUG
         builder.Logging.AddDebug();
