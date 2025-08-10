@@ -32,13 +32,6 @@
                 HorizontalOptions="Fill" />
 
             <Button
-                x:Name="MapPageBtn"
-                Text="Go to the Map" 
-                SemanticProperties.Hint="Setup the Course"
-                Clicked="OnMapPageClicked"
-                HorizontalOptions="Fill" />
-
-            <Button
                 x:Name="CourseSelectBtn"
                 Text="Choose a Course" 
                 SemanticProperties.Hint="Select a Course or Create a New One"

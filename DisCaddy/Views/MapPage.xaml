@@ -5,34 +5,48 @@
              x:Class="DisCaddy.Views.MapPage"
              Title="MapPage">
 
-    <StackLayout>
-        <Entry Placeholder="Enter course name" Text="{Binding CourseName}" />
-        
+    <StackLayout Spacing="10" Padding="12">
+
+        <!-- Create button shows when no selection and not creating -->
+        <Button Text="Create Course"
+                IsVisible="{Binding ShowCreateButton}"
+                Command="{Binding StartCreateCourseCommand}" />
+
+        <!-- Name entry dialog shows only while creating -->
+        <Frame IsVisible="{Binding ShowNameDialog}"
+               HasShadow="True" Padding="12" CornerRadius="12">
+            <VerticalStackLayout Spacing="8">
+                <Label Text="New Course" FontAttributes="Bold" />
+                <Entry Placeholder="Enter course name"
+                       Text="{Binding CourseName}" />
+                <HorizontalStackLayout Spacing="8" HorizontalOptions="End">
+                    <Button Text="Cancel" Command="{Binding CancelCreateCourseCommand}" />
+                    <Button Text="Save"   Command="{Binding SaveCourseCommand}" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Optional: show current course -->
+        <HorizontalStackLayout IsVisible="{Binding ShowSelectedRow}">
+            <Label Text="Selected: " />
+            <Label Text="{Binding SelectedCourse.Name, TargetNullValue=''}" FontAttributes="Bold"/>
+        </HorizontalStackLayout>
+
         <maps:Map x:Name="MyMap"
                   IsShowingUser="True"
                   MapType="Hybrid"
                   HeightRequest="500"
                   VerticalOptions="FillAndExpand" />
-        
+
         <Label x:Name="DistanceLabel"
                Text="Total Distance: 0 ft"
                FontSize="16"
-               HorizontalOptions="Center"
-               Margin="0,10,0,0" />
-        
-        <Button Text="Clear Path"
-                Clicked="OnClearClicked"
-                HorizontalOptions="Center"
-                Margin="0,0,0,0" />
-        
-        <Button Text="Create Course"
-            Clicked="OnCreateCourseClicked"
-            HorizontalOptions="Center"
-            Margin="0,10,0,0" />
+               HorizontalOptions="Center" />
 
-        <Button Text="Save Hole"
-            Clicked="OnSaveHole"
-            HorizontalOptions="Center"
-            Margin="0,5,0,10" />
+        <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+            <Button Text="Clear Path" Clicked="OnClearClicked" />
+            <Button Text="Save Hole"  Clicked="OnSaveHole" />
+        </HorizontalStackLayout>
+
     </StackLayout>
 </ContentPage>

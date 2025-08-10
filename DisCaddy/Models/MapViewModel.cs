@@ -1,36 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using System.Collections.ObjectModel;
 using DisCaddy.Objects;
 using DisCaddy.Repository.Interfaces;
-using Microsoft.Maui.Controls.Maps;
 using Microsoft.Maui.Devices.Sensors;
-using Microsoft.Maui.Maps;
 
 namespace DisCaddy.Models
 {
     public class MapViewModel : INotifyPropertyChanged
     {
-        public string CourseName { get; set; }
-        public Course CurrentCourse { get; private set; }
-        public ObservableCollection<Hole> Holes { get; set; } = new();
-        public Location MapCenter => CurrentHole?.TeeLocation.ToLocation();
-        public event Action<Location>? CenterMapRequested;
-
         private readonly ICourseRepository _courseRepo;
         private readonly IHoleRepository _holeRepo;
 
-        private int currentHoleIndex = 0;
-        private Hole currentHole;
-        public ICommand AddHoleCommand { get; }
-        public ICommand SaveCourseCommand { get; }
-        public ICommand NextHoleCommand { get; }
-        public ICommand PreviousHoleCommand { get; }
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public event Action<List<GeoPoint>>? FlightPathRequested;
+        void OnPropertyChanged([CallerMemberName] string? n = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
+        void OnStateChanged()
+        {
+            OnPropertyChanged(nameof(SelectedCourse));
+            OnPropertyChanged(nameof(IsCreatingCourse));
+            OnPropertyChanged(nameof(ShowCreateButton));
+            OnPropertyChanged(nameof(ShowNameDialog));
+        }
 
         public MapViewModel(ICourseRepository courseRepo, IHoleRepository holeRepo)
         {
@@ -38,55 +30,91 @@ namespace DisCaddy.Models
             _holeRepo = holeRepo;
 
             Holes = new ObservableCollection<Hole>();
-
-            AddHoleCommand = new Command<Hole>(async hole => await AddHoleAsync(hole));
+            AddHoleCommand = new Command<Hole>(async h => await AddHoleAsync(h));
+            StartCreateCourseCommand = new Command(() => IsCreatingCourse = true);
+            CancelCreateCourseCommand = new Command(() =>
+            {
+                IsCreatingCourse = false;
+                CourseName = string.Empty;
+                OnPropertyChanged(nameof(CourseName));
+            });
             SaveCourseCommand = new Command(async () => await CreateCourseAsync());
             NextHoleCommand = new Command(NextHole);
             PreviousHoleCommand = new Command(PreviousHole);
         }
-        private string status;
-        public string Status
-        {
-            get => status;
-            set
-            {
-                if (status != value)
-                {
-                    status = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
-                }
-            }
-        }
-        public Hole CurrentHole
-        {
-            get => currentHole;
-            set
-            {
-                if (currentHole != value)
-                {
-                    currentHole = value;
-                    OnPropertyChanged(nameof(CurrentHole));
 
-                    if (currentHole?.TeeLocation != null)
-                        CenterMapRequested?.Invoke(currentHole.TeeLocation.ToLocation());
+        #region UI state
+        private Course? _selectedCourse;
+        public Course? SelectedCourse
+        {
+            get => _selectedCourse;
+            set { if (_selectedCourse != value) { _selectedCourse = value; OnStateChanged(); } }
+        }
+
+        private bool _isCreatingCourse;
+        public bool IsCreatingCourse
+        {
+            get => _isCreatingCourse;
+            set { if (_isCreatingCourse != value) { _isCreatingCourse = value; OnStateChanged(); } }
+        }
+
+        public bool ShowCreateButton => SelectedCourse == null && !IsCreatingCourse;
+        public bool ShowNameDialog => IsCreatingCourse;
+        public bool ShowSelectedRow => SelectedCourse != null && !IsCreatingCourse;
+        #endregion
+
+        #region course/hole data
+        public string CourseName { get; set; } = string.Empty;
+        public Course? CurrentCourse { get; private set; }
+        public ObservableCollection<Hole> Holes { get; }
+        public event Action<Location>? CenterMapRequested;
+
+        private int _currentHoleIndex = 0;
+        private Hole? _currentHole;
+        public Hole? CurrentHole
+        {
+            get => _currentHole;
+            set
+            {
+                if (_currentHole != value)
+                {
+                    _currentHole = value;
+                    OnPropertyChanged();
+                    if (_currentHole?.TeeLocation != null)
+                        CenterMapRequested?.Invoke(_currentHole.TeeLocation.ToLocation());
                 }
             }
         }
+        #endregion
+
+        #region commands
+        public ICommand AddHoleCommand { get; }
+        public ICommand SaveCourseCommand { get; }
+        public ICommand StartCreateCourseCommand { get; }
+        public ICommand CancelCreateCourseCommand { get; }
+        public ICommand NextHoleCommand { get; }
+        public ICommand PreviousHoleCommand { get; }
+        #endregion
+        #region actions
         public async Task CreateCourseAsync()
         {
-            if (string.IsNullOrWhiteSpace(CourseName))
-                return;
+            if (string.IsNullOrWhiteSpace(CourseName)) return;
 
-            var course = new Course { Name = CourseName };
+            var course = new Course { Name = CourseName.Trim() };
             await _courseRepo.SaveCourseAsync(course);
+
             CurrentCourse = course;
+            SelectedCourse = course;
+            IsCreatingCourse = false;
+
+            // reset name field after creation
+            CourseName = string.Empty;
+            OnPropertyChanged(nameof(CourseName));
         }
 
         public async Task AddHoleAsync(Hole hole)
         {
-            if (CurrentCourse == null)
-                return;
-
+            if (CurrentCourse == null) return;
             hole.CourseId = CurrentCourse.Id;
             await _holeRepo.SaveHoleAsync(hole);
             Holes.Add(hole);
@@ -95,45 +123,37 @@ namespace DisCaddy.Models
         public async Task LoadCourseAsync(Course course)
         {
             CurrentCourse = course;
-            CourseName = course.Name;
+            SelectedCourse = course;
 
             var holes = await _holeRepo.GetHolesByCourseIdAsync(course.Id);
             Holes.Clear();
+            foreach (var h in holes) Holes.Add(h);
 
-            foreach(var hole in holes)
-            {
-                Holes.Add(hole);
-            }
-
-            currentHoleIndex = 0;
+            _currentHoleIndex = 0;
             CurrentHole = Holes.FirstOrDefault();
+            if (CurrentHole?.FlightPath != null && CurrentHole.FlightPath.Count > 0)
+                FlightPathRequested?.Invoke(CurrentHole.FlightPath);
         }
 
         private void NextHole()
         {
-            if(currentHoleIndex < Holes.Count)
+            if (Holes.Count == 0) return;
+            if (_currentHoleIndex < Holes.Count - 1)
             {
-                currentHoleIndex++;
-                CurrentHole = Holes[currentHoleIndex];
-                OnPropertyChanged(nameof(CurrentHole));
+                _currentHoleIndex++;
+                CurrentHole = Holes[_currentHoleIndex];
             }
         }
 
         private void PreviousHole()
         {
-            if (currentHoleIndex > 0)
+            if (Holes.Count == 0) return;
+            if (_currentHoleIndex > 0)
             {
-                currentHoleIndex--;
-                CurrentHole = Holes[currentHoleIndex];
-                OnPropertyChanged(nameof(CurrentHole));
+                _currentHoleIndex--;
+                CurrentHole = Holes[_currentHoleIndex];
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        #endregion
     }
 }
