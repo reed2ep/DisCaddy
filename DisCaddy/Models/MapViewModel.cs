@@ -14,6 +14,7 @@ namespace DisCaddy.Models
         private readonly IHoleRepository _holeRepo;
 
         public event PropertyChangedEventHandler? PropertyChanged;
+        public event Action<Location>? CenterMapRequested;
         public event Action<List<GeoPoint>>? FlightPathRequested;
         void OnPropertyChanged([CallerMemberName] string? n = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
         void OnStateChanged()
@@ -22,6 +23,7 @@ namespace DisCaddy.Models
             OnPropertyChanged(nameof(IsCreatingCourse));
             OnPropertyChanged(nameof(ShowCreateButton));
             OnPropertyChanged(nameof(ShowNameDialog));
+            OnPropertyChanged(nameof(ShowSelectedRow));
         }
 
         public MapViewModel(ICourseRepository courseRepo, IHoleRepository holeRepo)
@@ -67,7 +69,6 @@ namespace DisCaddy.Models
         public string CourseName { get; set; } = string.Empty;
         public Course? CurrentCourse { get; private set; }
         public ObservableCollection<Hole> Holes { get; }
-        public event Action<Location>? CenterMapRequested;
 
         private int _currentHoleIndex = 0;
         private Hole? _currentHole;
@@ -76,13 +77,16 @@ namespace DisCaddy.Models
             get => _currentHole;
             set
             {
-                if (_currentHole != value)
-                {
-                    _currentHole = value;
-                    OnPropertyChanged();
-                    if (_currentHole?.TeeLocation != null)
-                        CenterMapRequested?.Invoke(_currentHole.TeeLocation.ToLocation());
-                }
+                if (_currentHole == value) return;
+                _currentHole = value;
+                OnPropertyChanged();
+
+                if (value?.TeeLocation != null)
+                    CenterMapRequested?.Invoke(value.TeeLocation.ToLocation());
+
+                var path = value?.FlightPath;
+                if (path != null && path.Count > 0)
+                    FlightPathRequested?.Invoke(path);
             }
         }
         #endregion
@@ -107,7 +111,6 @@ namespace DisCaddy.Models
             SelectedCourse = course;
             IsCreatingCourse = false;
 
-            // reset name field after creation
             CourseName = string.Empty;
             OnPropertyChanged(nameof(CourseName));
         }
@@ -131,8 +134,6 @@ namespace DisCaddy.Models
 
             _currentHoleIndex = 0;
             CurrentHole = Holes.FirstOrDefault();
-            if (CurrentHole?.FlightPath != null && CurrentHole.FlightPath.Count > 0)
-                FlightPathRequested?.Invoke(CurrentHole.FlightPath);
         }
 
         private void NextHole()

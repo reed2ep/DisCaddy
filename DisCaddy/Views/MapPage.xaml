@@ -7,12 +7,10 @@
 
     <StackLayout Spacing="10" Padding="12">
 
-        <!-- Create button shows when no selection and not creating -->
         <Button Text="Create Course"
                 IsVisible="{Binding ShowCreateButton}"
                 Command="{Binding StartCreateCourseCommand}" />
 
-        <!-- Name entry dialog shows only while creating -->
         <Frame IsVisible="{Binding ShowNameDialog}"
                HasShadow="True" Padding="12" CornerRadius="12">
             <VerticalStackLayout Spacing="8">
@@ -26,10 +24,9 @@
             </VerticalStackLayout>
         </Frame>
 
-        <!-- Optional: show current course -->
-        <HorizontalStackLayout IsVisible="{Binding ShowSelectedRow}">
-            <Label Text="Selected: " />
-            <Label Text="{Binding SelectedCourse.Name, TargetNullValue=''}" FontAttributes="Bold"/>
+        <HorizontalStackLayout IsVisible="{Binding ShowSelectedRow}" HorizontalOptions="Center">
+            <Label Text="COURSE: " FontSize="Large" FontAttributes="Bold"/>
+            <Label Text="{Binding SelectedCourse.Name, TargetNullValue=''}" FontAttributes="Bold" FontSize="Large" TextTransform="Uppercase"/>
         </HorizontalStackLayout>
 
         <maps:Map x:Name="MyMap"
@@ -39,14 +36,23 @@
                   VerticalOptions="FillAndExpand" />
 
         <Label x:Name="DistanceLabel"
-               Text="Total Distance: 0 ft"
+               Text="Hole Distance: 0 ft"
                FontSize="16"
                HorizontalOptions="Center" />
-
-        <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
-            <Button Text="Clear Path" Clicked="OnClearClicked" />
-            <Button Text="Save Hole"  Clicked="OnSaveHole" />
-        </HorizontalStackLayout>
+        
+        <VerticalStackLayout Spacing= "8">
+            
+            <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                <Button Text="Previous Hole" Command="{Binding PreviousHoleCommand}" />
+                <Button Text="Next Hole"  Command="{Binding NextHoleCommand}" />
+            </HorizontalStackLayout>
+            
+            <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                <Button Text="Clear Path" Clicked="OnClearClicked" />
+                <Button Text="Save Hole"  Clicked="OnSaveHole" />
+            </HorizontalStackLayout>
+            
+        </VerticalStackLayout>
 
     </StackLayout>
 </ContentPage>
