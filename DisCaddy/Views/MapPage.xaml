@@ -5,22 +5,54 @@
              x:Class="DisCaddy.Views.MapPage"
              Title="MapPage">
 
-    <StackLayout>
+    <StackLayout Spacing="10" Padding="12">
+
+        <Button Text="Create Course"
+                IsVisible="{Binding ShowCreateButton}"
+                Command="{Binding StartCreateCourseCommand}" />
+
+        <Frame IsVisible="{Binding ShowNameDialog}"
+               HasShadow="True" Padding="12" CornerRadius="12">
+            <VerticalStackLayout Spacing="8">
+                <Label Text="New Course" FontAttributes="Bold" />
+                <Entry Placeholder="Enter course name"
+                       Text="{Binding CourseName}" />
+                <HorizontalStackLayout Spacing="8" HorizontalOptions="End">
+                    <Button Text="Cancel" Command="{Binding CancelCreateCourseCommand}" />
+                    <Button Text="Save"   Command="{Binding SaveCourseCommand}" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Frame>
+
+        <HorizontalStackLayout IsVisible="{Binding ShowSelectedRow}" HorizontalOptions="Center">
+            <Label Text="COURSE: " FontSize="Large" FontAttributes="Bold"/>
+            <Label Text="{Binding SelectedCourse.Name, TargetNullValue=''}" FontAttributes="Bold" FontSize="Large" TextTransform="Uppercase"/>
+        </HorizontalStackLayout>
+
         <maps:Map x:Name="MyMap"
                   IsShowingUser="True"
                   MapType="Hybrid"
                   HeightRequest="500"
                   VerticalOptions="FillAndExpand" />
-        
+
         <Label x:Name="DistanceLabel"
-               Text="Total Distance: 0 ft"
+               Text="Hole Distance: 0 ft"
                FontSize="16"
-               HorizontalOptions="Center"
-               Margin="0,10,0,0" />
+               HorizontalOptions="Center" />
         
-        <Button Text="Clear Path"
-                Clicked="OnClearClicked"
-                HorizontalOptions="Center"
-                Margin="0,0,0,0" />
+        <VerticalStackLayout Spacing= "8">
+            
+            <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                <Button Text="Previous Hole" Command="{Binding PreviousHoleCommand}" />
+                <Button Text="Next Hole"  Command="{Binding NextHoleCommand}" />
+            </HorizontalStackLayout>
+            
+            <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                <Button Text="Clear Path" Clicked="OnClearClicked" />
+                <Button Text="Save Hole"  Clicked="OnSaveHole" />
+            </HorizontalStackLayout>
+            
+        </VerticalStackLayout>
+
     </StackLayout>
 </ContentPage>

@@ -9,6 +9,7 @@ using CommunityToolkit.Maui.Maps;
 using DisCaddy.Repository;
 using DisCaddy.Repository.Interfaces;
 using System.Text.Json;
+using DisCaddy.Models;
 
 namespace DisCaddy;
 
@@ -16,7 +17,7 @@ public static class MauiProgram
 {
 	public static MauiApp CreateMauiApp()
 	{
-        var config = ConfigLoader.Load();
+        var config = Task.Run(() => ConfigLoader.LoadAsync()).GetAwaiter().GetResult();
         var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
@@ -30,13 +31,31 @@ public static class MauiProgram
         builder.UseMauiCommunityToolkit();
         builder.UseMauiCommunityToolkitMaps(config.GoogleMapsApiKey);
 
+        builder.Services.AddTransient<MainPage>();
+
         builder.Services.AddSingleton<IDiscRepository>(s =>
 		{
 			var dbPath = Path.Combine(FileSystem.AppDataDirectory, "discs.db3");
 			return new DiscRepository(dbPath);
         });
-		builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<BagPage>();
+
+        builder.Services.AddSingleton<ICourseRepository>(s =>
+        {
+            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "courses.db3");
+            return new CourseRepository(dbPath);
+        });
+
+        builder.Services.AddSingleton<IHoleRepository>(s =>
+        {
+            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "holes.db3");
+            return new HoleRepository(dbPath);
+        });
+
+        builder.Services.AddTransient<CourseSelectPage>();
+        builder.Services.AddTransient<MapPage>();
+        builder.Services.AddTransient<MapViewModel>();
+        builder.Services.AddSingleton<IAppConfigProvider, AppConfigProvider>();
 
 #if DEBUG
         builder.Logging.AddDebug();

@@ -19,9 +19,10 @@ namespace DisCaddy.Views
             await Navigation.PushAsync(bagPage);
         }
 
-        private async void OnMapPageClicked(object sender, EventArgs e)
+        private async void OnCourseSelectPageClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new MapPage());
+            var courseSelectPage = _serviceProvider.GetService<CourseSelectPage>();
+            await Navigation.PushAsync(courseSelectPage);
         }
     }
 

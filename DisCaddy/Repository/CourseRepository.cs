@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DisCaddy.Models;
+using DisCaddy.Objects;
 using DisCaddy.Repository.Interfaces;
 using SQLite;
 namespace DisCaddy.Repository
@@ -29,11 +29,13 @@ namespace DisCaddy.Repository
 
         public Task<Course?> GetCourseByIdAsync(int id)
         {
-            return _database.GetAsync<Course>(id);
+            return _database.Table<Course>().Where(c => c.Id == id).FirstOrDefaultAsync();
         }
 
         public Task SaveCourseAsync(Course course)
         {
+            if (course.Id != 0)
+                return _database.UpdateAsync(course);
             return _database.InsertAsync(course);
         }
     }

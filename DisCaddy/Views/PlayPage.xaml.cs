@@ -13,45 +13,45 @@ public partial class PlayPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await GetCurrentLocation();
+        //await GetCurrentLocation();
         await StartCompass();
 
     }
 
-    public async Task GetWeatherData(double lat, double lon)
-    {
-        var config = ConfigLoader.Load();
-        string key = config.OpenWeatherApiKey;
+    //public async Task GetWeatherData(double lat, double lon)
+    //{
+    //    var config = ConfigLoader.Load();
+    //    string key = config.OpenWeatherApiKey;
 
-        string uri = $"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude=minutely,hourly,daily,alerts&appid={key}";
+    //    string uri = $"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude=minutely,hourly,daily,alerts&appid={key}";
 
 
-        HttpClient client = new HttpClient();
-        HttpResponseMessage response = await client.GetAsync(uri);
+    //    HttpClient client = new HttpClient();
+    //    HttpResponseMessage response = await client.GetAsync(uri);
 
-        if (response.IsSuccessStatusCode)
-        {
-            string json = await response.Content.ReadAsStringAsync();
-            Console.WriteLine(json);
-        }
-    }
+    //    if (response.IsSuccessStatusCode)
+    //    {
+    //        string json = await response.Content.ReadAsStringAsync();
+    //        Console.WriteLine(json);
+    //    }
+    //}
 
-    public async Task GetCurrentLocation()
-    {
-        try
-        {
-            GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
-            _cancelTokenSource = new CancellationTokenSource();
-            Location location = await Geolocation.Default.GetLocationAsync(request, _cancelTokenSource.Token);
+    //public async Task GetCurrentLocation()
+    //{
+    //    try
+    //    {
+    //        GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
+    //        _cancelTokenSource = new CancellationTokenSource();
+    //        Location location = await Geolocation.Default.GetLocationAsync(request, _cancelTokenSource.Token);
 
-            if (location != null)
-                await GetWeatherData(location.Latitude, location.Longitude);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Location Access Failed");
-        }
-    }
+    //        if (location != null)
+    //            await GetWeatherData(location.Latitude, location.Longitude);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Console.WriteLine("Location Access Failed");
+    //    }
+    //}
 
     public async Task StartCompass()
     {

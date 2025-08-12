@@ -4,9 +4,30 @@
              x:Class="DisCaddy.Views.CourseSelectPage"
              Title="CourseSelectPage">
     <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <StackLayout Padding="10" Spacing="8">
+            <Button
+                x:Name="CourseCreateBtn"
+                Text="Create New Course" 
+                SemanticProperties.Hint="Create New Course"
+                Clicked="OnCourseCreateClicked"
+                HorizontalOptions="Fill" />
+
+            <CollectionView ItemsSource="{Binding Courses}"
+                SelectionMode="Single"
+                SelectionChanged="OnCourseSelected">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="10" ColumnDefinitions="Auto, *, Auto" VerticalOptions="Center">
+                            <!-- Course info -->
+                            <VerticalStackLayout Grid.Column="1" Padding="10,0">
+                                <Label Text="{Binding Name}"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
     </VerticalStackLayout>
 </ContentPage>

@@ -1,0 +1,38 @@
+﻿u# Ignore user-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Build output
+bin/
+obj/
+[Bb]uild/
+[Bb]uilds/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Visual Studio cache/options directory
+.vs/
+*.dbmdl
+*.dbproj.schemaview
+*.pdb
+
+# Logs
+*.log
+
+# Config/Secrets
+config.json
+Resources/values/secrets.xml
+Secrets.props
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# MAUI generated
+Platforms/Android/Resources/values/secrets.xml

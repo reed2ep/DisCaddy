@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SQLite;
 
-namespace DisCaddy.Models
+namespace DisCaddy.Objects
 {
     public class Disc : INotifyPropertyChanged
     {

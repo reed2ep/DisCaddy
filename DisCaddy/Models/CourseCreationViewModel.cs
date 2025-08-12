@@ -1,4 +1,5 @@
-﻿using DisCaddy.Repository.Interfaces;
+﻿using DisCaddy.Objects;
+using DisCaddy.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,7 +17,6 @@ namespace DisCaddy.Models
         public ObservableCollection<Hole> Holes { get; set; } = new();
         public ICommand AddHoleCommand { get; }
         public ICommand SaveCourseCommand { get; }
-
         private readonly ICourseRepository _repo;
 
         public CourseCreationViewModel(ICourseRepository repo)
@@ -31,8 +31,6 @@ namespace DisCaddy.Models
             var course = new Course
             {
                 Name = CourseName,
-                Holes = Holes.ToList(),
-                LocationName = Holes.FirstOrDefault()?.TeeLocation?.ToString() ?? "Unknown"
             };
 
             await _repo.SaveCourseAsync(course);
