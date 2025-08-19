@@ -2,9 +2,13 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
-             x:Class="DisCaddy.Views.MapPage"
-             Title="MapPage">
-
+             x:Class="DisCaddy.Views.MapPage">
+    
+    <ContentPage.ToolbarItems >
+        <ToolbarItem Text="Prev" Command="{Binding PreviousHoleCommand}" Order="Primary" Priority="0"/>
+        <ToolbarItem Text="Next"  Command="{Binding NextHoleCommand}" Order="Primary" Priority="1"/>
+    </ContentPage.ToolbarItems>
+    
     <StackLayout Spacing="10" Padding="12">
 
         <Button Text="Create Course"
@@ -34,24 +38,27 @@
                   MapType="Hybrid"
                   HeightRequest="500"
                   VerticalOptions="FillAndExpand" />
+        
+        <HorizontalStackLayout Spacing="8" HorizontalOptions="Center" >
+            
+            <Label Text="{Binding CurrentHole.HoleNumber, StringFormat='Hole {0}', TargetNullValue='Hole —'}"
+           FontAttributes="Bold" />
 
+            <Label Text="{Binding CurrentHole.Par, StringFormat='Par {0}', TargetNullValue='Par —'}"
+           FontAttributes="Bold" />
+            
+        </HorizontalStackLayout>
+        
         <Label x:Name="DistanceLabel"
-               Text="Hole Distance: 0 ft"
+               Text="Distance: 0 ft"
                FontSize="16"
                HorizontalOptions="Center" />
         
         <VerticalStackLayout Spacing= "8">
-            
-            <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
-                <Button Text="Previous Hole" Command="{Binding PreviousHoleCommand}" />
-                <Button Text="Next Hole"  Command="{Binding NextHoleCommand}" />
-            </HorizontalStackLayout>
-            
             <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
                 <Button Text="Clear Path" Clicked="OnClearClicked" />
                 <Button Text="Save Hole"  Clicked="OnSaveHole" />
             </HorizontalStackLayout>
-            
         </VerticalStackLayout>
 
     </StackLayout>
